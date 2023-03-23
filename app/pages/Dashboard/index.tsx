@@ -1,18 +1,16 @@
-import { useState } from "react";
 import { MdAttachMoney } from "react-icons/md";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 
 import { CardValue } from "./CardValues";
 import { CardCounts } from "./CardCounts";
-import { mockCounts } from "./mockCounts";
 
-export const Dashboard = () => {
-  const [listCounts, setListCounts] = useState<any>(mockCounts);
+import type { Expense } from "~/interfaces/expenses";
 
-  const handleClickDeleteItem = (id: number) => {
-    setListCounts(listCounts.filter((item: any) => item.id !== id));
-  };
+interface DashboardProps {
+  expenses: Expense[];
+}
 
+export const Dashboard = ({ expenses }: DashboardProps) => {
   return (
     <div className="flex flex-col">
       <h1 className="text-[1.5rem] text-white font-bold">Dashboard</h1>
@@ -40,17 +38,22 @@ export const Dashboard = () => {
         />
       </div>
       <div className="flex flex-col mt-12 gap-5">
-        {listCounts.map((count: any) => (
-          <CardCounts
-            key={count.id}
-            id={count.id}
-            date={count.date}
-            name={count.name}
-            value={count.value}
-            check={count.check}
-            handleClickDeleteItem={handleClickDeleteItem}
-          />
-        ))}
+        {expenses.length ? (
+          expenses.map((count) => (
+            <CardCounts
+              key={count.id}
+              id={count.id}
+              date={count.due_date}
+              name={count.name}
+              value={count.amount}
+              checked={count.checked}
+            />
+          ))
+        ) : (
+          <p className="text-white text-[1.5rem]">
+            Você ainda não cadastrou suas contas!
+          </p>
+        )}
       </div>
     </div>
   );

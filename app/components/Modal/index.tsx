@@ -4,11 +4,11 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 interface ModalProps {
   open: boolean;
-  action: () => void;
+  expenseId: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const Modal = ({ open, setOpen, action }: ModalProps) => {
+export const Modal = ({ open, expenseId, setOpen }: ModalProps) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -59,14 +59,15 @@ export const Modal = ({ open, setOpen, action }: ModalProps) => {
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+
+                <form
+                  method="post"
+                  className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6"
+                >
+                  <input type="hidden" value={expenseId} name="expenseId" />
                   <button
-                    type="button"
+                    type="submit"
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm bg-red hover:bg-red-500 sm:ml-3 sm:w-auto"
-                    onClick={() => {
-                      action();
-                      setOpen(false);
-                    }}
                   >
                     Excluir
                   </button>
@@ -77,7 +78,7 @@ export const Modal = ({ open, setOpen, action }: ModalProps) => {
                   >
                     Cancel
                   </button>
-                </div>
+                </form>
               </Dialog.Panel>
             </Transition.Child>
           </div>

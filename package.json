@@ -14,11 +14,14 @@
   "dependencies": {
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
+    "@prisma/client": "^4.11.0",
     "@remix-run/node": "^1.14.3",
     "@remix-run/react": "^1.14.3",
     "@remix-run/vercel": "^1.14.3",
     "@vercel/node": "^2.6.2",
     "isbot": "latest",
+    "pg": "^8.10.0",
+    "prisma": "^4.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0"
