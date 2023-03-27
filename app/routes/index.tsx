@@ -7,8 +7,6 @@ import { AiOutlinePlus } from "react-icons/ai";
 
 import { userMock } from "~/api/userMock";
 
-import { db } from "~/db/db.server";
-
 import type { User } from "~/interfaces/user";
 import type { Expense } from "~/interfaces/expenses";
 
@@ -22,6 +20,7 @@ import { ExpenseEnum } from "@prisma/client";
 import { addNewExpense } from "~/api/services/addNewExpense";
 import type { ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import { Modal } from "~/components/Modal";
+import { getAllExpenses } from "~/api/services/getAllExpenses";
 
 interface LoaderResponse {
   user: User;
@@ -65,7 +64,7 @@ export const action = async ({ request }: ActionArgs) => {
 export const loader: LoaderFunction = async () => {
   const { id, email, name } = await userMock();
 
-  const data = await db.expense.findMany({ where: { type: "expense" } });
+  const data = await getAllExpenses();
 
   return {
     counts: data,
@@ -87,7 +86,7 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 };
 
 export default function Index() {
-  const [openModalAdd, setOpenModalAdd] = useState(true);
+  const [openModalAdd, setOpenModalAdd] = useState(false);
 
   const { counts, user } = useLoaderData<LoaderResponse>();
 
