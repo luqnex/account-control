@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { FaTrashRestore } from "react-icons/fa";
+import { FormDelete } from "~/components/FormDelete";
 import { Modal } from "~/components/Modal";
 import { formatDate } from "~/utils";
 
@@ -48,7 +49,10 @@ export const CardCounts = ({
         className="text-red-500 cursor-pointer text-[1.3rem]"
         onClick={() => setOpen(true)}
       />
-      <Modal expenseId={id} open={open} setOpen={setOpen} />
+
+      <Modal open={open} setOpen={setOpen}>
+        <FormDelete expenseId={id} setOpen={setOpen} />
+      </Modal>
     </div>
   );
 };
