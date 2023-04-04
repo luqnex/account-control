@@ -4,14 +4,14 @@ import { Form, useSubmit } from "@remix-run/react";
 
 import { FaTrashRestore } from "react-icons/fa";
 
-import { formatDate } from "~/utils";
+import { formatCurrencyValue, formatDate } from "~/utils";
 import { Modal } from "~/components/Modal";
 import { FormDelete } from "~/components/FormDelete";
 
 interface CardCountsProps {
   id: string;
   name: string;
-  value: string;
+  value: number;
   date: string;
   checked: boolean;
 }
@@ -58,7 +58,7 @@ export const CardCounts = ({
 
         <div>
           <p>
-            {name} - R$ {value}
+            {name} - {formatCurrencyValue(value)}
           </p>
           <p>Vencimento: {formatDate(date)}</p>
         </div>

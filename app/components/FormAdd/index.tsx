@@ -8,7 +8,6 @@ interface ModalProps {
 
 export const FormAdd = ({ setOpen }: ModalProps) => {
   const navigation = useNavigation();
-  console.log(navigation.state);
 
   useEffect(() => {
     if (navigation.state === "submitting") {

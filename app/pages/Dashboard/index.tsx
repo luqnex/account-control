@@ -5,33 +5,41 @@ import { CardValue } from "./CardValues";
 import { CardCounts } from "./CardCounts";
 
 import type { Expense } from "~/interfaces/expenses";
+import type { Revenue } from "~/interfaces/revenue";
 
 interface DashboardProps {
+  revenue: Revenue;
   expenses: Expense[];
 }
 
-export const Dashboard = ({ expenses }: DashboardProps) => {
+export const Dashboard = ({ revenue, expenses }: DashboardProps) => {
+  const sumOfExpenses = expenses.reduce((acc, expense) => {
+    return acc + Number(expense.amount);
+  }, 0);
+
+  const currentBalance = revenue.amount - sumOfExpenses;
+
   return (
     <div className="flex flex-col mb-[6rem]">
       <h1 className="text-[1.5rem] text-white font-bold">Dashboard</h1>
       <div className="flex gap-6 mt-6">
         <CardValue
           title="Saldo atual"
-          value="R$ 1.000,00"
+          value={currentBalance}
           icon={
             <MdAttachMoney className="text-[2rem] bg-blue text-white rounded-full" />
           }
         />
         <CardValue
-          title="Rendas"
-          value="R$ 1.000,00"
+          title="Renda"
+          value={revenue.amount}
           icon={
             <MdExpandLess className="text-[2rem] bg-green  rounded-full fill-white" />
           }
         />
         <CardValue
           title="Gastos"
-          value="R$ 1.000,00"
+          value={sumOfExpenses}
           icon={
             <MdExpandMore className="text-[2rem]  bg-red rounded-full fill-white" />
           }

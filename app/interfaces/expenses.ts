@@ -4,7 +4,7 @@ export interface Expense {
   id: string;
   name: string;
   type: ExpenseEnum;
-  amount: string;
+  amount: number;
   due_date: string;
   created_at: string;
   checked: boolean;

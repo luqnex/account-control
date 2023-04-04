@@ -21,10 +21,13 @@ import { deleteExpense } from "~/api/services/deleteExpense";
 import { addNewExpense } from "~/api/services/addNewExpense";
 import { updateExpense } from "~/api/services/updateExpense";
 import { getAllExpenses } from "~/api/services/getAllExpenses";
+import { getRevenue } from "~/api/services/getRevenue";
+import type { Revenue } from "~/interfaces/revenue";
 
 interface LoaderResponse {
   user: User;
   counts: Expense[];
+  revenue: Revenue[];
 }
 
 export const action = async ({ request }: ActionArgs) => {
@@ -68,10 +71,13 @@ export const action = async ({ request }: ActionArgs) => {
 export const loader: LoaderFunction = async () => {
   const { id, email, name } = await userMock();
 
-  const data = await getAllExpenses();
+  const counts = await getAllExpenses();
+
+  const revenue = await getRevenue();
 
   return {
-    counts: data,
+    counts,
+    revenue,
     user: {
       id,
       name,
@@ -92,11 +98,13 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 export default function Index() {
   const [openModalAdd, setOpenModalAdd] = useState(false);
 
-  const { counts, user } = useLoaderData<LoaderResponse>();
+  const { counts, user, revenue } = useLoaderData<LoaderResponse>();
+
+  const lastRevenue = revenue[0];
 
   return (
     <DefaultLayout name={user.name}>
-      <Dashboard expenses={counts} />
+      <Dashboard revenue={lastRevenue} expenses={counts} />
 
       <button
         className="w-[3.5rem] h-[3.5rem] flex items-center justify-center fixed right-10 bottom-10 bg-blue rounded-full  text-white text-[1rem]"
