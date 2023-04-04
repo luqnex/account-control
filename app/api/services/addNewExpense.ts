@@ -16,7 +16,6 @@ export const addNewExpense = async ({
   type,
   userId,
 }: AddNewExpenseProps) => {
-  // "a61bba42-72e4-484e-a2f4-b561e8bb02e3"
   return await db.expense.create({
     data: {
       name: name,

@@ -1,11 +1,21 @@
-import { Form } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 import { Input } from "./Input";
+import { useEffect } from "react";
 
 interface ModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const FormAdd = ({ setOpen }: ModalProps) => {
+  const navigation = useNavigation();
+  console.log(navigation.state);
+
+  useEffect(() => {
+    if (navigation.state === "submitting") {
+      setOpen(false);
+    }
+  }, [navigation.state, setOpen]);
+
   return (
     <Form method="post" className="bg-gray-50 px-4 py-3 flex flex-col gap-2">
       <h1 className="text-[1.5rem] my-4 m-auto ">Adição de gasto ou renda</h1>

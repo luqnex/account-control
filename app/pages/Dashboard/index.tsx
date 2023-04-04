@@ -12,7 +12,7 @@ interface DashboardProps {
 
 export const Dashboard = ({ expenses }: DashboardProps) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mb-[6rem]">
       <h1 className="text-[1.5rem] text-white font-bold">Dashboard</h1>
       <div className="flex gap-6 mt-6">
         <CardValue

@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { useLoaderData } from "@remix-run/react";
-import type { LoaderFunction } from "react-router";
-
+import type { ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { ActionArgs } from "@remix-run/node";
+import type { LoaderFunction } from "react-router";
 
 import { AiOutlinePlus } from "react-icons/ai";
 
@@ -12,14 +13,13 @@ import type { Expense } from "~/interfaces/expenses";
 
 import { DefaultLayout } from "~/components/DefaultLayout";
 
-import { Dashboard } from "~/pages/Dashboard";
-import { deleteExpense } from "~/api/services/deleteExpense";
-import { useState } from "react";
-import { FormAdd } from "~/components/FormAdd";
-import { ExpenseEnum } from "@prisma/client";
-import { addNewExpense } from "~/api/services/addNewExpense";
-import type { ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import { Modal } from "~/components/Modal";
+import { ExpenseEnum } from "@prisma/client";
+import { Dashboard } from "~/pages/Dashboard";
+import { FormAdd } from "~/components/FormAdd";
+import { deleteExpense } from "~/api/services/deleteExpense";
+import { addNewExpense } from "~/api/services/addNewExpense";
+import { updateExpense } from "~/api/services/updateExpense";
 import { getAllExpenses } from "~/api/services/getAllExpenses";
 
 interface LoaderResponse {
@@ -40,7 +40,7 @@ export const action = async ({ request }: ActionArgs) => {
   const amount = formData.get("amount")?.toString();
   const dueDate = formData.get("dueDate")?.toString();
 
-  console.log(name, amount, dueDate, type);
+  const checkboxId = formData.get("checkboxId")?.toString();
 
   if (isFormAddNewExpense) {
     addNewExpense({
@@ -56,6 +56,10 @@ export const action = async ({ request }: ActionArgs) => {
 
   if (isFormDeleteExpense) {
     deleteExpense(expenseId);
+  }
+
+  if (checkboxId) {
+    updateExpense(checkboxId);
   }
 
   return null;
