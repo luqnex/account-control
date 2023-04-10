@@ -1,6 +1,7 @@
-import { Form, useNavigation } from "@remix-run/react";
-import { Input } from "./Input";
 import { useEffect } from "react";
+import { Form, useNavigation } from "@remix-run/react";
+
+import { Input } from "./Input";
 
 interface ModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,7 +18,7 @@ export const FormAdd = ({ setOpen }: ModalProps) => {
 
   return (
     <Form method="post" className="bg-gray-50 px-4 py-3 flex flex-col gap-2">
-      <h1 className="text-[1.5rem] my-4 m-auto ">Adição de gasto ou renda</h1>
+      <h1 className="text-[1.5rem] my-4 m-auto">Adição de gasto ou renda</h1>
 
       <input
         type="hidden"
@@ -25,34 +26,42 @@ export const FormAdd = ({ setOpen }: ModalProps) => {
         defaultValue="formAddNewExpense"
       />
 
-      <label htmlFor="name">Escolha o nome:</label>
-      <Input name="name" id="name" placeholder="Nome" required />
-
-      <div className="flex flex-col gap-1">
+      <div className="flex gap-3">
         <p>Escolha o tipo:</p>
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <input
             type="radio"
             name="type"
             id="expense"
             value="expense"
             defaultChecked
+            className="w-[1rem]"
           />
           <label htmlFor="expense">Gasto</label>
         </div>
 
-        <div className="flex gap-3">
-          <input type="radio" name="type" id="revenue" value="revenue" />
+        <div className="flex gap-2">
+          <input
+            type="radio"
+            name="type"
+            id="revenue"
+            value="revenue"
+            className="w-[1rem]"
+          />
           <label htmlFor="revenue">Renda</label>
         </div>
       </div>
+
+      <label htmlFor="name">Escolha o nome:</label>
+      <Input name="name" id="name" placeholder="Nome" required />
 
       <label htmlFor="amount">Insira o valor:</label>
       <Input
         placeholder="Valor"
         name="amount"
         id="amount"
-        type="text"
+        type="number"
+        step="0.01"
         required
       />
 
