@@ -6,7 +6,7 @@ import { FaTrashRestore } from "react-icons/fa";
 
 import { formatCurrencyValue, formatDate } from "~/utils";
 import { Modal } from "~/components/Modal";
-import { FormDelete } from "~/components/FormDelete";
+import { FormDelete } from "~/pages/Dashboard/FormDelete";
 
 interface CardCountsProps {
   id: string;

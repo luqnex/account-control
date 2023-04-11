@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Form, useNavigation } from "@remix-run/react";
 
-import { Input } from "./Input";
+import { Input } from "../../components/Input";
 
 interface ModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

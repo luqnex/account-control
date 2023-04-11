@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useLoaderData } from "@remix-run/react";
 import type { ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
-import type { ActionArgs } from "@remix-run/node";
-import type { LoaderFunction } from "react-router";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 
 import { AiOutlinePlus } from "react-icons/ai";
 
@@ -16,13 +15,14 @@ import { DefaultLayout } from "~/components/DefaultLayout";
 import { Modal } from "~/components/Modal";
 import { ExpenseEnum } from "@prisma/client";
 import { Dashboard } from "~/pages/Dashboard";
-import { FormAdd } from "~/components/FormAdd";
-import { deleteExpense } from "~/api/services/deleteExpense";
-import { addNewExpense } from "~/api/services/addNewExpense";
-import { updateExpense } from "~/api/services/updateExpense";
-import { getAllExpenses } from "~/api/services/getAllExpenses";
-import { getRevenue } from "~/api/services/getRevenue";
+import { FormAdd } from "~/pages/Dashboard/FormAdd";
+import { deleteExpense } from "~/api/services/deleteExpense.server";
+import { addNewExpense } from "~/api/services/addNewExpense.server";
+import { updateExpense } from "~/api/services/updateExpense.server";
+import { getAllExpenses } from "~/api/services/getAllExpenses.server";
+import { getRevenue } from "~/api/services/getRevenue.server";
 import type { Revenue } from "~/interfaces/revenue";
+import { requireUserId } from "~/session.server";
 
 interface LoaderResponse {
   user: User;
@@ -68,7 +68,9 @@ export const action = async ({ request }: ActionArgs) => {
   return null;
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader = async ({ request }: LoaderArgs) => {
+  const userId = await requireUserId(request);
+
   const { id, email, name } = await userMock();
 
   const counts = await getAllExpenses();
