@@ -17,7 +17,7 @@ export const Dashboard = ({ revenue, expenses }: DashboardProps) => {
     return acc + Number(expense.amount);
   }, 0);
 
-  const currentBalance = revenue.amount - sumOfExpenses;
+  const currentBalance = revenue?.amount - sumOfExpenses;
 
   return (
     <div className="flex flex-col mb-[6rem]">
@@ -25,14 +25,14 @@ export const Dashboard = ({ revenue, expenses }: DashboardProps) => {
       <div className="flex gap-6 mt-6">
         <CardValue
           title="Saldo atual"
-          value={currentBalance}
+          value={currentBalance || 0}
           icon={
             <MdAttachMoney className="text-[2rem] bg-blue text-white rounded-full" />
           }
         />
         <CardValue
           title="Renda"
-          value={revenue.amount}
+          value={revenue?.amount || 0}
           icon={
             <MdExpandLess className="text-[2rem] bg-green  rounded-full fill-white" />
           }

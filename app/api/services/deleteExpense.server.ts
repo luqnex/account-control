@@ -1,5 +1,11 @@
 import { db } from "~/db/db.server";
 
-export const deleteExpense = async (expenseId: string | undefined) => {
-  return await db.expense.delete({ where: { id: expenseId } });
+interface DeleteExpenseParams {
+  expenseId: string | undefined;
+}
+
+export const deleteExpense = async ({ expenseId }: DeleteExpenseParams) => {
+  return await db.expense.delete({
+    where: { id: expenseId },
+  });
 };

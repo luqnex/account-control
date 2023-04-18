@@ -23,7 +23,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   if (!verifiedUser) {
     return json(
-      { errors: { email: "Invalid email or password", password: null } },
+      { errors: { email: "Email ou senha inválidos", password: null } },
       { status: 400 }
     );
   }

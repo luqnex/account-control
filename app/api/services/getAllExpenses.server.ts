@@ -1,8 +1,12 @@
 import { db } from "~/db/db.server";
 
-export const getAllExpenses = async () => {
+interface GetAllExpensesParams {
+  userId: string;
+}
+
+export const getAllExpenses = async ({ userId }: GetAllExpensesParams) => {
   return await db.expense.findMany({
-    where: { type: "expense" },
+    where: { type: "expense", user_id: userId },
     orderBy: { created_at: "asc" },
   });
 };

@@ -1,5 +1,7 @@
 import { Form } from "@remix-run/react";
 
+import { FiLogOut } from "react-icons/fi";
+
 interface HeaderProps {
   name: string;
 }
@@ -10,7 +12,7 @@ export const Header = ({ name = "Usuário" }: HeaderProps) => {
       <h1 className="text-white text-[1.4rem] font-bold">Olá, {name}</h1>
       <Form action="/logout" method="post">
         <button className="text-white text-[1rem]" type="submit">
-          Sair
+          <FiLogOut className="text-[1.5rem] hover:text-gray" />
         </button>
       </Form>
     </div>

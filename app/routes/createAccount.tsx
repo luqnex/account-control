@@ -1,7 +1,10 @@
 import type { ActionArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { redirect, json } from "@remix-run/node";
+import { useActionData } from "@remix-run/react";
 
 import { createUser } from "~/api/services/createUser.server";
+import { getUserByEmail } from "~/api/services/getUserByEmail.server";
+import type { ErrorsCreateAccount } from "~/interfaces/createAccount";
 import { CreateAccountPage } from "~/pages/CreateAccount";
 
 export const action = async ({ request }: ActionArgs) => {
@@ -15,11 +18,21 @@ export const action = async ({ request }: ActionArgs) => {
     return null;
   }
 
+  const hasEmail = await getUserByEmail({ email });
+
+  if (hasEmail) {
+    return json({ errors: { email: "Tente outro email" } }, { status: 400 });
+  }
+
   await createUser({ email, name, password });
 
   return redirect("/login");
 };
 
 export default function CreateAccount() {
-  return <CreateAccountPage />;
+  const actionData = useActionData<ErrorsCreateAccount>();
+
+  const errors = actionData?.errors;
+
+  return <CreateAccountPage errors={errors} />;
 }

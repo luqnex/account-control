@@ -2,10 +2,9 @@ import { useState } from "react";
 import { useLoaderData } from "@remix-run/react";
 import type { ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 
 import { AiOutlinePlus } from "react-icons/ai";
-
-import { userMock } from "~/api/userMock";
 
 import type { User } from "~/interfaces/user";
 import type { Expense } from "~/interfaces/expenses";
@@ -23,6 +22,7 @@ import { getAllExpenses } from "~/api/services/getAllExpenses.server";
 import { getRevenue } from "~/api/services/getRevenue.server";
 import type { Revenue } from "~/interfaces/revenue";
 import { requireUserId } from "~/session.server";
+import { getUserById } from "~/api/services/getUserById.server";
 
 interface LoaderResponse {
   user: User;
@@ -31,6 +31,8 @@ interface LoaderResponse {
 }
 
 export const action = async ({ request }: ActionArgs) => {
+  const userId = await requireUserId(request);
+
   const formData = await request.formData();
 
   const isFormAddNewExpense = formData.get("formAddNewExpense") ? true : false;
@@ -52,16 +54,19 @@ export const action = async ({ request }: ActionArgs) => {
       name: name ?? "",
       type:
         type === "expense" ? ExpenseEnum["expense"] : ExpenseEnum["revenue"],
-      // TODO: valor mockado, ajustar após criar a parte de criação de conta e login
-      userId: "a61bba42-72e4-484e-a2f4-b561e8bb02e3",
+      userId: userId,
     });
   }
 
   if (isFormDeleteExpense) {
-    deleteExpense(expenseId);
+    // TODO: aqui validar id vindo do form com id salvo no cookie.
+
+    deleteExpense({ expenseId });
   }
 
   if (checkboxId) {
+    // TODO: aqui validar id vindo do form com id salvo no cookie.
+
     updateExpense(checkboxId);
   }
 
@@ -71,19 +76,30 @@ export const action = async ({ request }: ActionArgs) => {
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireUserId(request);
 
-  const { id, email, name } = await userMock();
+  const user = await getUserById({ id: userId });
 
-  const counts = await getAllExpenses();
+  if (!user) {
+    throw redirect("/login");
+  }
 
-  const revenue = await getRevenue();
+  const excludePassword = (user: User) => {
+    delete user["password"];
+    return user;
+  };
+
+  const userData = excludePassword(user);
+
+  const counts = await getAllExpenses({ userId });
+
+  const revenue = await getRevenue({ userId });
 
   return {
     counts,
     revenue,
     user: {
-      id,
-      name,
-      email,
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
     },
   };
 };
