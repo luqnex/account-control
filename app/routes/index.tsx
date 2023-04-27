@@ -114,7 +114,7 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 };
 
 export default function Index() {
-  const [openModalAdd, setOpenModalAdd] = useState(false);
+  const [openModalAdd, setOpenModalAdd] = useState(true);
 
   const { counts, user, revenue } = useLoaderData<LoaderResponse>();
 

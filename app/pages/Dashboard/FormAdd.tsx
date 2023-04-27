@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import type { ChangeEvent } from "react";
+import { useEffect, useState } from "react";
 import { Form, useNavigation } from "@remix-run/react";
 
 import { Input } from "../../components/Input";
@@ -7,8 +8,27 @@ interface ModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+enum RadioButtonValue {
+  expense = "expense",
+  revenue = "revenue",
+}
+
 export const FormAdd = ({ setOpen }: ModalProps) => {
+  const [radioButtonChecked, setRadioButtonChecked] = useState(
+    RadioButtonValue.expense
+  );
+
   const navigation = useNavigation();
+
+  const handleChangeRadioButton = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.id === RadioButtonValue.expense) {
+      setRadioButtonChecked(RadioButtonValue.expense);
+
+      return;
+    }
+
+    setRadioButtonChecked(RadioButtonValue.revenue);
+  };
 
   useEffect(() => {
     if (navigation.state === "submitting") {
@@ -17,7 +37,7 @@ export const FormAdd = ({ setOpen }: ModalProps) => {
   }, [navigation.state, setOpen]);
 
   return (
-    <Form method="post" className="bg-gray-50 px-4 py-3 flex flex-col gap-2">
+    <Form method="post" className="flex flex-col gap-2 px-4 py-3">
       <h1 className="text-[1.5rem] my-4 m-auto">Adição de gasto ou renda</h1>
 
       <input
@@ -36,6 +56,7 @@ export const FormAdd = ({ setOpen }: ModalProps) => {
             value="expense"
             defaultChecked
             className="w-[1rem]"
+            onChange={handleChangeRadioButton}
           />
           <label htmlFor="expense">Gasto</label>
         </div>
@@ -47,13 +68,28 @@ export const FormAdd = ({ setOpen }: ModalProps) => {
             id="revenue"
             value="revenue"
             className="w-[1rem]"
+            onChange={handleChangeRadioButton}
           />
           <label htmlFor="revenue">Renda</label>
         </div>
       </div>
 
-      <label htmlFor="name">Escolha o nome:</label>
-      <Input name="name" id="name" placeholder="Nome" required />
+      <div
+        className={`flex flex-col gap-2 ${
+          radioButtonChecked === RadioButtonValue.revenue && "hidden"
+        }`}
+      >
+        <label htmlFor="name">Escolha o nome:</label>
+        <Input
+          name="name"
+          id="name"
+          placeholder="Nome"
+          required
+          defaultValue={
+            radioButtonChecked === RadioButtonValue.revenue ? "Renda" : ""
+          }
+        />
+      </div>
 
       <label htmlFor="amount">Insira o valor:</label>
       <Input
@@ -65,8 +101,21 @@ export const FormAdd = ({ setOpen }: ModalProps) => {
         required
       />
 
-      <label htmlFor="date">Insira a data de vencimento:</label>
-      <Input name="dueDate" id="date" type="date" required />
+      <div
+        className={`flex flex-col gap-2 ${
+          radioButtonChecked === RadioButtonValue.revenue && "hidden"
+        }`}
+      >
+        <label htmlFor="date">Insira a data de vencimento:</label>
+        <Input
+          name="dueDate"
+          id="date"
+          type="date"
+          required
+          min={new Date().toISOString().substring(0, 10)}
+          defaultValue={new Date().toISOString().substring(0, 10)}
+        />
+      </div>
 
       <div className="flex justify-end gap-2 mt-4">
         <button
