@@ -23,6 +23,7 @@ import { getRevenue } from "~/api/services/getRevenue.server";
 import type { Revenue } from "~/interfaces/revenue";
 import { requireUserId } from "~/session.server";
 import { getUserById } from "~/api/services/getUserById.server";
+import { editExpense } from "~/api/services/editExpense.server";
 
 interface LoaderResponse {
   user: User;
@@ -35,6 +36,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   const formData = await request.formData();
 
+  const isFormEditExpense = formData.get("formEditExpense") ? true : false;
   const isFormAddNewExpense = formData.get("formAddNewExpense") ? true : false;
   const isFormDeleteExpense = formData.get("formDeleteExpense") ? true : false;
 
@@ -46,6 +48,17 @@ export const action = async ({ request }: ActionArgs) => {
   const dueDate = formData.get("dueDate")?.toString();
 
   const checkboxId = formData.get("checkboxId")?.toString();
+
+  console.log("isFormEditExpense", isFormEditExpense);
+
+  if (isFormEditExpense) {
+    editExpense({
+      id: expenseId ?? "",
+      amount: amount ?? "",
+      due_date: new Date(dueDate ?? ""),
+      name: name ?? "",
+    });
+  }
 
   if (isFormAddNewExpense) {
     addNewExpense({
@@ -114,7 +127,7 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 };
 
 export default function Index() {
-  const [openModalAdd, setOpenModalAdd] = useState(true);
+  const [openModalAdd, setOpenModalAdd] = useState(false);
 
   const { counts, user, revenue } = useLoaderData<LoaderResponse>();
 

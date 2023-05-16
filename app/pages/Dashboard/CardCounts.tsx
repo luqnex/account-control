@@ -7,6 +7,7 @@ import { FaTrashRestore } from "react-icons/fa";
 import { formatCurrencyValue, formatDate } from "~/utils";
 import { Modal } from "~/components/Modal";
 import { FormDelete } from "~/pages/Dashboard/FormDelete";
+import { FormEditCount } from "./FormEditCount";
 
 interface CardCountsProps {
   id: string;
@@ -23,8 +24,9 @@ export const CardCounts = ({
   name,
   value,
 }: CardCountsProps) => {
-  const [open, setOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(checked);
+  const [openModalEdit, setOpenModalEdit] = useState(false);
+  const [openModalDelete, setOpenModalDelete] = useState(false);
 
   const submit = useSubmit();
 
@@ -56,7 +58,10 @@ export const CardCounts = ({
           />
         </Form>
 
-        <div>
+        <div
+          className="hover:cursor-pointer"
+          onClick={() => setOpenModalEdit(!openModalEdit)}
+        >
           <p>
             {name} - {formatCurrencyValue(value)}
           </p>
@@ -65,11 +70,20 @@ export const CardCounts = ({
       </div>
       <FaTrashRestore
         className="text-red-500 cursor-pointer text-[1.3rem]"
-        onClick={() => setOpen(true)}
+        onClick={() => setOpenModalDelete(true)}
       />
 
-      <Modal open={open} setOpen={setOpen}>
-        <FormDelete expenseId={id} setOpen={setOpen} />
+      <Modal open={openModalDelete} setOpen={setOpenModalDelete}>
+        <FormDelete expenseId={id} setOpen={setOpenModalDelete} />
+      </Modal>
+      <Modal open={openModalEdit} setOpen={setOpenModalEdit}>
+        <FormEditCount
+          id={id}
+          date={date}
+          name={name}
+          value={value}
+          setOpen={setOpenModalEdit}
+        />
       </Modal>
     </div>
   );
